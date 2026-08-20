@@ -1,10 +1,34 @@
 @echo off
 chcp 65001
 
-echo [1/2] Установка программ через winget...
+echo [1/3] Проверка доступности программ в репозитории...
 echo.
 
-echo Нету Nvidia App и Minibin !
+call :Check "Zen-Team.Zen-Browser" "Zen Browser"
+call :Check "Discord.Discord" "Discord"
+call :Check "Git.Git" "Git"
+call :Check "Rainmeter.Rainmeter" "Rainmeter"
+call :Check "Valve.Steam" "Steam"
+call :Check "Telegram.TelegramDesktop" "Telegram"
+call :Check "Microsoft.VisualStudioCode" "VS Code"
+call :Check "Microsoft.VisualStudio.2022.Community" "Visual Studio 2022 Community"
+call :Check "Windhawk.Windhawk" "Windhawk"
+call :Check "Python.Python.3.12" "Python 3.12"
+
+echo Нету Nvidia App, Minibin и Windhawk!
+echo.
+
+:Choice
+set /p choice="Продолжаем установку? [yes/no]"
+if "%choiсe%" == "yes" goto :Continue
+if "%choiсe%" == "no" goto :Exit
+
+echo Неверный ввод! Введите yes или no.
+pause
+goto :Choice
+
+:Continue
+echo [2/3] Установка программ через winget...
 echo.
 
 winget install --id Zen-Team.Zen-Browser -e --silent 
@@ -22,7 +46,7 @@ winget install --id Python.Python.3.12 -e --silent
 echo Все программы установлены!
 echo.
 
-echo [2/2] Восстановление сохранённых настроек...
+echo [3/3] Восстановление сохранённых настроек...
 echo.
 
 :: Проверяем, есть ли Git в стандартном месте
@@ -41,3 +65,17 @@ echo.
 
 echo Восстановление завершено! Перезагрузите компьютер для применения некоторых изменений.
 pause
+
+goto :Exit
+
+:Check
+winget search --id %1 >nul 2>&1
+if "%errorlevel%"=="0" (
+    echo [✅] %2 - Есть в репо
+) else (
+    echo [❌] %2 - Не найдено
+)
+exit /b 0
+
+:Exit
+exit /b 0
