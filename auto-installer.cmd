@@ -1,5 +1,13 @@
 @echo off
-chcp 65001
+chcp 65001 >nul
+
+::Проверка прав администратора через костыль
+::(Команда для отображения всех сетевый сессий, для её выполнения нужны админ права)
+net session >nul 2>&1
+if errorlevel 1 (
+    echo [‼️ОШИБКА‼️] Требуются права администратора!
+    exit /b 1
+)
 
 echo [1/3] Проверка доступности программ в репозитории...
 echo.
@@ -12,7 +20,6 @@ call :Check "Valve.Steam" "Steam"
 call :Check "Telegram.TelegramDesktop" "Telegram"
 call :Check "Microsoft.VisualStudioCode" "VS Code"
 call :Check "Microsoft.VisualStudio.2022.Community" "Visual Studio 2022 Community"
-call :Check "Windhawk.Windhawk" "Windhawk"
 call :Check "Python.Python.3.12" "Python 3.12"
 
 echo Нету Nvidia App, Minibin и Windhawk!
@@ -20,10 +27,10 @@ echo.
 
 :Choice
 set /p choice="Продолжаем установку? [yes/no]"
-if "%choiсe%" == "yes" goto :Continue
-if "%choiсe%" == "no" goto :Exit
+if "%choice%" == "yes" goto :Continue
+if "%choice%" == "no" goto :Exit
 
-echo Неверный ввод! Введите yes или no.
+echo Неверный ввод! Введите 'yes' или 'no'.
 pause
 goto :Choice
 
@@ -31,19 +38,63 @@ goto :Choice
 echo [2/3] Установка программ через winget...
 echo.
 
-winget install --id Zen-Team.Zen-Browser -e --silent 
+set install_errors=0
+
+winget install --id Zen-Team.Zen-Browser -e --silent
+if errorlevel 1 (
+    echo Не удалось установить Zen browser
+    set /a install_errors+=1
+)
+
 winget install --id Discord.Discord -e --silent
+if errorlevel 1 (
+    echo Не удалось установить Discord
+    set /a install_errors+=1
+)
+
 winget install --id Git.Git -e --silent
+if errorlevel 1 (
+    echo Не удалось установить Git
+    set /a install_errors+=1
+)
+
 winget install --id Rainmeter.Rainmeter -e --silent
+if errorlevel 1 (
+    echo Не удалось установить Rainmeter
+    set /a install_errors+=1
+)
+
 winget install --id Valve.Steam -e --silent
+if errorlevel 1 (
+    echo Не удалось установить Steam
+    set /a install_errors+=1
+)
+
 winget install --id Telegram.TelegramDesktop -e --silent
+if errorlevel 1 (
+    echo Не удалось установить Telegram
+    set /a install_errors+=1
+)
+
 winget install --id Microsoft.VisualStudioCode -e --silent
+if errorlevel 1 (
+    echo Не удалось установить VSC
+    set /a install_errors+=1
+)
+
 winget install --id Microsoft.VisualStudio.2022.Community -e --silent
-winget install --id Windhawk.Windhawk -e --silent
+if errorlevel 1 (
+    echo Не удалось установить VS
+    set /a install_errors+=1
+)
+
 winget install --id Python.Python.3.12 -e --silent
+if errorlevel 1 (
+    echo Не удалось установить Python 3.12
+    set /a install_errors+=1
+)
 
-
-echo Все программы установлены!
+echo Этап установки завершен!
 echo.
 
 echo [3/3] Восстановление сохранённых настроек...
@@ -55,9 +106,7 @@ if exist "C:\Program Files\Git\bin\git.exe" (
     "C:\Program Files\Git\bin\git.exe" config --global user.email "maxprizrac@gmail.com"
     "C:\Program Files\Git\bin\git.exe" config --global core.quotepath false
     echo Git настроен.
-) 
-
-else (
+) else (
     echo ОШИБКА: Git не найден в C:\Program Files\Git\bin\git.exe
     echo Проверьте, что установка прошла успешно.
 )
@@ -70,12 +119,17 @@ goto :Exit
 
 :Check
 winget search --id %1 >nul 2>&1
-if "%errorlevel%"=="0" (
-    echo [✅] %2 - Есть в репо
-) else (
+if errorlevel 1 (
     echo [❌] %2 - Не найдено
+    exit /b 1
+) else (
+    echo [✅] %2 - Есть в репо
+    exit /b 0
 )
-exit /b 0
 
 :Exit
-exit /b 0
+if %install_errors% GTR 0 (
+    exit /b 1
+) else (
+    exit /b 0
+)
