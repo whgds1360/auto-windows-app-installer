@@ -1,12 +1,17 @@
 @echo off
 chcp 65001 >nul
 
+set admin_errors=0
+set install_errors=0
+set backup_errors=0
+
 ::Проверка прав администратора через костыль
 ::(Команда для отображения всех сетевый сессий, для её выполнения нужны админ права)
 net session >nul 2>&1
 if errorlevel 1 (
+    set /a admin_errors+=1
     echo [‼️ОШИБКА‼️] Требуются права администратора!
-    exit /b 1
+    goto :Exit
 )
 
 echo [1/3] Проверка доступности программ в репозитории...
@@ -37,8 +42,6 @@ goto :Choice
 :Continue
 echo [2/3] Установка программ через winget...
 echo.
-
-set install_errors=0
 
 winget install --id Zen-Team.Zen-Browser -e --silent
 if errorlevel 1 (
@@ -97,7 +100,8 @@ if errorlevel 1 (
 echo Этап установки завершен!
 echo.
 
-echo [3/3] Восстановление сохранённых настроек...
+:Backup
+echo [3/3] Восстановление настроек Git...
 echo.
 
 :: Проверяем, есть ли Git в стандартном месте
@@ -107,12 +111,15 @@ if exist "C:\Program Files\Git\bin\git.exe" (
     "C:\Program Files\Git\bin\git.exe" config --global core.quotepath false
     echo Git настроен.
 ) else (
+    set /a backup_errors+=1
     echo ОШИБКА: Git не найден в C:\Program Files\Git\bin\git.exe
     echo Проверьте, что установка прошла успешно.
 )
 echo.
 
 echo Восстановление завершено! Перезагрузите компьютер для применения некоторых изменений.
+echo Ошибок по установке: [%install_errors%]
+echo Ошибок по бэкапу: [%backup_errors%]
 pause
 
 goto :Exit
@@ -128,8 +135,8 @@ if errorlevel 1 (
 )
 
 :Exit
-if %install_errors% GTR 0 (
-    exit /b 1
-) else (
-    exit /b 0
-)
+if %install_errors% GTR 0 exit /b 1
+if %backup_errors% GTR 0 exit /b 1
+if %admin_errors% GTR 0 exit /b 1
+
+exit /b 0
