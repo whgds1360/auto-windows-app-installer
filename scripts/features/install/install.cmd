@@ -56,12 +56,6 @@ if errorlevel 1 (
     set /a install_errors+=1
 )
 
-winget install --id FluentTerminal -e --silent
-if errorlevel 1 (
-    echo Не удалось установить FluentTerminal
-    set /a install_errors+=1
-)
-
 winget install --id Amnezia.AmneziaWG -e --silent
 if errorlevel 1 (
     echo Не удалось установить AmneziaWG

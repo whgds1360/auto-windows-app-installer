@@ -11,7 +11,6 @@ call :Check "Telegram.TelegramDesktop" "Telegram"
 call :Check "Microsoft.VisualStudioCode" "VS Code"
 call :Check "Microsoft.VisualStudio.2022.Community" "Visual Studio 2022 Community"
 call :Check "Python.Python.3.12" "Python 3.12"
-call :Check "FluentTerminal" "FluentTerminal"
 call :Check "Amnezia.AmneziaWG" "AmneziaWG"
 
 echo Напоминаю Nvidia App, Minibin и Windhawk качаешь сам!
