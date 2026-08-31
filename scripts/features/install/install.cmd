@@ -44,9 +44,9 @@ if errorlevel 1 (
     set /a install_errors+=1
 )
 
-winget install --id Microsoft.VisualStudio.2022.Community -e
+winget install --id winget install Microsoft.DotNet.SDK.10 -e --silent
 if errorlevel 1 (
-    echo Не удалось установить VS
+    echo Не удалось установить SDK 10
     set /a install_errors+=1
 )
 

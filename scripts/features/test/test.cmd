@@ -9,7 +9,7 @@ call :Check "Rainmeter.Rainmeter" "Rainmeter"
 call :Check "Valve.Steam" "Steam"
 call :Check "Telegram.TelegramDesktop" "Telegram"
 call :Check "Microsoft.VisualStudioCode" "VS Code"
-call :Check "Microsoft.VisualStudio.2022.Community" "Visual Studio 2022 Community"
+call :Check "Microsoft.DotNet.SDK.10" "Microsoft.DotNet.SDK.10"
 call :Check "Python.Python.3.12" "Python 3.12"
 call :Check "Amnezia.AmneziaWG" "AmneziaWG"
 
