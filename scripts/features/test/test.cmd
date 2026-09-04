@@ -5,7 +5,6 @@ set not_found=0
 call :Check "Zen-Team.Zen-Browser" "Zen Browser"
 call :Check "Discord.Discord" "Discord"
 call :Check "Git.Git" "Git"
-call :Check "Rainmeter.Rainmeter" "Rainmeter"
 call :Check "Valve.Steam" "Steam"
 call :Check "Telegram.TelegramDesktop" "Telegram"
 call :Check "Microsoft.VisualStudioCode" "VS Code"

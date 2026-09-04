@@ -20,12 +20,6 @@ if errorlevel 1 (
     set /a install_errors+=1
 )
 
-winget install --id Rainmeter.Rainmeter -e --silent
-if errorlevel 1 (
-    echo Не удалось установить Rainmeter
-    set /a install_errors+=1
-)
-
 winget install --id Valve.Steam -e --silent
 if errorlevel 1 (
     echo Не удалось установить Steam
